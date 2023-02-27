@@ -5,7 +5,7 @@ import json
 import arrow
 import asyncio
 import config
-try: 
+try:
  client = TelegramClient("telega", config.api_id, config.api_hash)
  @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test"))
  async def trigger(event):
@@ -22,12 +22,11 @@ try:
             #if not_none_message == 0:
                 #not_none_message = 1
             #elif not_none_message == 1:
-                #await client.send_message(entity = channel_entity, message = "Лучший чат для знакомств тут) ?? t.me/pekachyat", comment_to = post[0].id)
+                #await client.send_message(entity = channel_entity, message = "text", comment_to = post[0].id)
         #await asyncio.sleep(10)
  async def main():
     prew_date = "0"
     while True:
-      try:
         utc = arrow.utcnow()
         local = utc.to("Europe/Warsaw") #Kiev
         local_date = local.format('H:mm')
@@ -39,10 +38,6 @@ try:
             await client(functions.account.UpdateProfileRequest(about="The risk was calculated, but I'm bad at math. My time - " + json.loads('\"'+local_date+'\"')))
             prew_date = local_date
         await asyncio.sleep(1)
-      except errors.FloodWaitError as e:
-        print(local.format('H:mm:ss'), "- !", e, "!")
-        sleep(e.seconds)
-        print(local.format('H:mm:ss'), "- PROGRAMM RUNNING")
  with client:
     #loop = asyncio.get_event_loop()
     #client.loop.create_task(spam())
