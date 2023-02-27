@@ -7,10 +7,10 @@ import asyncio
 import config
 try:
  client = TelegramClient("telega", config.api_id, config.api_hash)
- @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test"))
- async def trigger(event):
+ @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test")) #triggers on specific text in specific chat from specific user
+ async def trigger(event): #answer with specific text
     await event.reply("test") #or without reply #await client.send_message("me", "test")
- #async def spam():
+ #async def spam(): #write specific comment to new posts in channel with specific message
     #channel_id = 1001418440636
     #channel_entity = await client.get_entity(channel_id)
     #last_message_id = None
@@ -24,7 +24,7 @@ try:
             #elif not_none_message == 1:
                 #await client.send_message(entity = channel_entity, message = "text", comment_to = post[0].id)
         #await asyncio.sleep(10)
- async def main():
+ async def main(): #updating bio to text + local time with nice font
     prew_date = "0"
     while True:
         utc = arrow.utcnow()
