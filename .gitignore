@@ -1,0 +1,6 @@
+config.py
+user.lock
+telega.session
+telega.s~journal
+*autorun.sh
+/__pycache__
