@@ -4,3 +4,4 @@ telega.session
 telega.s~journal
 *autorun.sh
 /__pycache__
+parser.py
