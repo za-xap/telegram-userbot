@@ -2,6 +2,7 @@ config.py
 user.lock
 telega.session
 telega.s~journal
+telega.session-journal
 *autorun.sh
 /__pycache__
 parser.py
