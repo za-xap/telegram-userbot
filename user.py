@@ -4,12 +4,26 @@ import datetime
 import json
 import arrow
 import asyncio
-import config
+import config, parser
 try:
  client = TelegramClient("telega", config.api_id, config.api_hash)
  @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test")) #triggers on specific text in specific chat from specific user
  async def trigger(event): #answer with specific text
     await event.reply("test") #or without reply #await client.send_message("me", "test")
+ async def par():
+     a = 0
+     while True:
+        b = parser.main()
+        if a == 0 and b == 0:
+            pass
+        elif a == 0 and b == 1:
+            a = 1
+            await client.send_message("me", "New action!")
+        elif a == 1 and b == 1:
+            pass
+        elif a == 1 and b == 0:
+            a = 0
+        await asyncio.sleep(5)
  #async def spam(): #write specific comment to new posts in channel with specific message
     #channel_id = 1001418440636
     #channel_entity = await client.get_entity(channel_id)
@@ -39,10 +53,10 @@ try:
             prew_date = local_date
         await asyncio.sleep(1)
  with client:
-    #loop = asyncio.get_event_loop()
-    #client.loop.create_task(spam())
-    #client.loop.create_task(main())
-    #client.loop.run_forever()
-    client.loop.run_until_complete(main())
+    loop = asyncio.get_event_loop()
+    client.loop.create_task(par())
+    client.loop.create_task(main())
+    client.loop.run_forever()
+    #client.loop.run_until_complete(main())
 except KeyboardInterrupt:
  pass
