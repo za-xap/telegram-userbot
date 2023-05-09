@@ -5,14 +5,15 @@ import json
 import arrow
 import asyncio
 import config, parser
-try:
- client = TelegramClient("telega", config.api_id, config.api_hash)
- @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test")) #triggers on specific text in specific chat from specific user
- async def trigger(event): #answer with specific text
+import signal
+client = TelegramClient("telega", config.api_id, config.api_hash)
+@client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test")) #triggers on specific text in specific chat from specific user
+async def trigger(event): #answer with specific text
     await event.reply("test") #or without reply #await client.send_message("me", "test")
- async def par():
-     a = 0
-     while True:
+async def par():
+    signal.signal(signal.SIGINT, signal.SIG_DFL) #this restores the default Ctrl+C signal handler, which just kills the process
+    a = 0
+    while True:
         b = parser.main()
         if a == 0 and b == 0:
             pass
@@ -23,7 +24,8 @@ try:
             pass
         elif a == 1 and b == 0:
             a = 0
-        await asyncio.sleep(5)
+        await asyncio.sleep(1800)
+ 
  #async def spam(): #write specific comment to new posts in channel with specific message
     #channel_id = 1001418440636
     #channel_entity = await client.get_entity(channel_id)
@@ -38,7 +40,7 @@ try:
             #elif not_none_message == 1:
                 #await client.send_message(entity = channel_entity, message = "text", comment_to = post[0].id)
         #await asyncio.sleep(10)
- async def main(): #updating bio to text + local time with nice font
+async def main(): #updating bio to text + local time with nice font
     prew_date = "0"
     while True:
         utc = arrow.utcnow()
@@ -52,11 +54,9 @@ try:
             await client(functions.account.UpdateProfileRequest(about="The risk was calculated, but I'm bad at math. My time - " + json.loads('\"'+local_date+'\"')))
             prew_date = local_date
         await asyncio.sleep(1)
- with client:
+with client:
     loop = asyncio.get_event_loop()
     client.loop.create_task(par())
     client.loop.create_task(main())
     client.loop.run_forever()
     #client.loop.run_until_complete(main())
-except KeyboardInterrupt:
- pass
