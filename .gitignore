@@ -5,4 +5,4 @@ telega.s~journal
 telega.session-journal
 *autorun.sh
 /__pycache__
-parser.py
+cookies.py

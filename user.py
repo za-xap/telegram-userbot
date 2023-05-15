@@ -24,7 +24,7 @@ async def par():
             pass
         elif a == 1 and b == 0:
             a = 0
-        await asyncio.sleep(1800)
+        await asyncio.sleep(30)
  
  #async def spam(): #write specific comment to new posts in channel with specific message
     #channel_id = 1001418440636
