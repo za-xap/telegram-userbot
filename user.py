@@ -19,13 +19,13 @@ async def par():
             pass
         elif a == 0 and b == 1:
             a = 1
-            await client.send_message("me", "New action!")
+            await client.send_message("me", "New action!", schedule = datetime.datetime.now() + datetime.timedelta(seconds=10))
         elif a == 1 and b == 1:
             pass
         elif a == 1 and b == 0:
             a = 0
-        await asyncio.sleep(30)
- 
+        await asyncio.sleep(20)
+
  #async def spam(): #write specific comment to new posts in channel with specific message
     #channel_id = 1001418440636
     #channel_entity = await client.get_entity(channel_id)

@@ -18,8 +18,6 @@ def main():
             file = open('cookies.py', mode='w')
             file.write("PHPSESSIDBACK = '" + c + "'")
             file.close()
-    else:
-        pass
 
     soup = BeautifulSoup(r.content, 'html.parser')
     i = soup.find("li", {"class": "active"}).get_text()
@@ -27,8 +25,6 @@ def main():
         i = 0
     elif i != "Завдання":
         i = 1
-    else:
-        pass
     return i
 
 if __name__ == "__main__":
