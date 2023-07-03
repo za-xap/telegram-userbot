@@ -44,7 +44,7 @@ async def main(): #updating bio to text + local time with nice font
     prew_date = "0"
     while True:
         utc = arrow.utcnow()
-        local = utc.to("Europe/Kiev") #Kiev or Warsaw
+        local = utc.to("Europe/Warsaw") #Kiev or Warsaw
         local_date = local.format('H:mm')
         local_date = local_date.translate(local_date.maketrans("0123456789","ghijklmnop"))
         r = [['g', '\\uD835\\uDFEC'], ['h', '\\uD835\\uDFED'], ['i', '\\uD835\\uDFEE'], ['j', '\\uD835\\uDFEF'], ['k', '\\uD835\\uDFF0'], ['l', '\\uD835\\uDFF1'], ['m', '\\uD835\\uDFF2'], ['n', '\\uD835\\uDFF3'], ['o', '\\uD835\\uDFF4'], ['p', '\\uD835\\uDFF5']]
