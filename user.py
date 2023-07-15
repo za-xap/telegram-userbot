@@ -1,12 +1,11 @@
-from telethon import functions, types, errors, connection, TelegramClient, events
-from time import sleep
+from telethon import functions, TelegramClient, events
 import datetime
 import json
 import arrow
 import asyncio
 import config, parser
 import signal
-client = TelegramClient("telega", config.api_id, config.api_hash)
+client = TelegramClient("telega", config.api_id, config.api_hash) #api_id and api_hash variables from config.py file
 @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test")) #triggers on specific text in specific chat from specific user
 async def trigger(event): #answer with specific text
     await event.reply("test") #or without reply #await client.send_message("me", "test")
