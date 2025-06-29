@@ -5,6 +5,8 @@ import arrow
 import asyncio
 import config, parser
 import signal
+import socket
+import urllib.request
 client = TelegramClient("telega", config.api_id, config.api_hash) #api_id and api_hash variables from config.py file
 @client.on(events.NewMessage(chats = "me", from_users = "me", pattern = "test")) #triggers on specific text in specific chat from specific user
 async def trigger(event): #answer with specific text
@@ -24,21 +26,6 @@ async def par():
         elif a == 1 and b == 0:
             a = 0
         await asyncio.sleep(20)
-
- #async def spam(): #write specific comment to new posts in channel with specific message
-    #channel_id = 1001418440636
-    #channel_entity = await client.get_entity(channel_id)
-    #last_message_id = None
-    #not_none_message = 0
-    #while True:
-        #post = await client.get_messages(channel_entity, limit=1)
-        #if last_message_id != post[0].id:
-            #last_message_id = post[0].id
-            #if not_none_message == 0:
-                #not_none_message = 1
-            #elif not_none_message == 1:
-                #await client.send_message(entity = channel_entity, message = "text", comment_to = post[0].id)
-        #await asyncio.sleep(10)
 async def main(): #updating bio to text + local time with nice font
     prew_date = "0"
     while True:
@@ -53,9 +40,16 @@ async def main(): #updating bio to text + local time with nice font
             await client(functions.account.UpdateProfileRequest(about="The risk was calculated, but I'm bad at math. My time - " + json.loads('\"'+local_date+'\"')))
             prew_date = local_date
         await asyncio.sleep(1)
+async def downdetector():
+    while True:
+        try:
+            urllib.request.urlopen("https://hc-ping.com/" + config.hc_id, timeout=10)
+        except socket.error as e:
+            print("Ping failed: %s" % e)
+        await asyncio.sleep(30)
 with client:
     loop = asyncio.get_event_loop()
     client.loop.create_task(par())
     client.loop.create_task(main())
+    client.loop.create_task(downdetector())
     client.loop.run_forever()
-    #client.loop.run_until_complete(main())
