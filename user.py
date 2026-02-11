@@ -33,6 +33,48 @@ async def main():  # updating bio to text + local time with nice font
         await asyncio.sleep(1)
 
 
+async def log():  # logger of deleted messages, first group for all incoming messages and second only for deleted
+    @client.on(events.NewMessage(incoming=True))
+    async def on_new(event):
+        try:
+            sender = await event.get_sender()
+        except Exception:
+            return
+        me = await client.get_me()
+        if sender.bot or event.is_channel or event.sender_id == me.id:
+            return
+        forwarded = await client.forward_messages(config.LOG_TMP, event.message, silent=True)
+        try:
+            if sender and sender.id:
+                link = f"<a href=\"tg://user?id={sender.id}\">{sender.id}</a>"
+                if sender.username:
+                    link += f" | @{sender.username}"
+                elif sender.first_name or sender.last_name:
+                    name = f"{sender.first_name or ''} {sender.last_name or ''}".strip()
+                    link += f" | {name}"
+        except Exception:
+            link = "unknown"
+        await client.send_message(config.LOG_TMP, f"#orig-{event.message.id}\n{link}",  reply_to=forwarded.id,
+                                  parse_mode="html", link_preview=False, silent=True)
+        await client(functions.account.UpdateStatusRequest(offline=True))
+
+    @client.on(events.MessageDeleted())
+    async def on_deleted(event):
+        for orig_msg_id in event.deleted_ids:
+            msgs = await client.get_messages(config.LOG_TMP, search=f"#orig-{orig_msg_id}", limit=1)
+            if not msgs:
+                continue
+            lines = (msgs[0].message or "").split("\n", 1)
+            if "unknown" in lines[1] or not msgs[0].reply_to_msg_id:
+                continue
+            orig = await client.get_messages(int(lines[1].split()[0]), ids=orig_msg_id)
+            if orig:
+                continue
+            await client.forward_messages(config.LOG_FINAL, [msgs[0].reply_to_msg_id, msgs[0].id],
+                                          from_peer=config.LOG_TMP)
+            await client(functions.account.UpdateStatusRequest(offline=True))
+
+
 async def downdetector():
     while True:
         try:
@@ -45,4 +87,5 @@ async def downdetector():
 with client:
     client.loop.create_task(main())
     client.loop.create_task(downdetector())
+    client.loop.create_task(log())
     client.run_until_disconnected()
