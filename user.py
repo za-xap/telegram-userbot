@@ -23,7 +23,7 @@ async def main():  # updating bio to text + local time with nice font
     }
     while True:
         utc = arrow.utcnow()
-        local = utc.to("Europe/Warsaw")  # Kiev or Warsaw
+        local = utc.to("Europe/Warsaw")  # Kyiv or Warsaw
         local_date = local.format('H:mm')
         local_date = ''.join(digits.get(c, c) for c in local_date)
         if local_date != prew_date:
@@ -67,6 +67,10 @@ async def log():  # logger of deleted messages, first group for all incoming mes
             lines = (msgs[0].message or "").split("\n", 1)
             if "unknown" in lines[1] or not msgs[0].reply_to_msg_id:
                 continue
+            orig = await client.get_messages(int(lines[1].split()[0]), ids=orig_msg_id)
+            if orig:
+                continue
+            await asyncio.sleep(1.5)  # this and second get_messages below should help with the false positives
             orig = await client.get_messages(int(lines[1].split()[0]), ids=orig_msg_id)
             if orig:
                 continue
